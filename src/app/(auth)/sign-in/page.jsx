@@ -48,7 +48,7 @@ export default function SignInForm() {
     }
     console.log(result)
     if (result?.url) {
-      router.replace('/dashboard');
+      router.push('/');
     }
   };
 

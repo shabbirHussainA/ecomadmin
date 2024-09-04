@@ -1,27 +1,40 @@
-import { NextResponse } from 'next/server'
-export { default } from "next-auth/middleware"  // the middlewear are available to all the routes
-import { getToken } from "next-auth/jwt" // getting Tokens
- //todo middleware configuration
-// This function can be marked `async` if using `await` inside
+import { NextResponse } from 'next/server';
+export { default } from "next-auth/middleware";
+import { getToken } from "next-auth/jwt";
+
 export async function middleware(request) {
-  const token = await getToken({req:request})
-  const url =request.nextUrl 
-// if the user has the token than route him to the dashboard
-  if(token && (
+  const token = await getToken({ req: request, secret: process.env.NEXTAUTH_SECRET });
+  const url = request.nextUrl;
+
+  // If the user has the token, redirect them away from auth pages
+  if (token && (
     url.pathname.startsWith('/sign-in') ||
     url.pathname.startsWith('/sign-up') ||
-    url.pathname.startsWith('/verify') 
-   )){
-    return NextResponse.redirect(new URL('/', request.url))
-   }
-  //  if the user does not have the token he will route to the signin
-   if(!token && (url.pathname.startsWith('/dashboard'))){
-    url.pathname.startsWith('/sign-in')
-   }
-  return NextResponse.next() //if no condition runs than the custom route will run
+    url.pathname.startsWith('/verify')
+  )) {
+    return NextResponse.redirect(new URL('/dashboard', request.url)); // Redirect to the dashboard if the user is authenticated
+  }
+
+  // If the user doesn't have the token, redirect them to the sign-in page for protected routes
+  if (!token && (
+    url.pathname.startsWith('/categories') ||
+    url.pathname.startsWith('/orders') || 
+    url.pathname.startsWith('/reviews') ||
+    url.pathname === '/' // Protect the home route if needed
+  )) {
+    return NextResponse.redirect(new URL('/sign-in', request.url));
+  }
+
+  // Continue with the request if no condition is met
+  return NextResponse.next();
 }
- 
-// middleware are activate on matchers
+
 export const config = {
-  matcher:[ '/sign-in','/','/sign-up','/dashboard/:path*','/verify/:path*']
-}
+  matcher: [
+    '/sign-in', 
+    '/sign-up', 
+    '/verify', 
+    '/dashboard/:path*', 
+    '/:path*' // Protect all routes by default if necessary
+  ],
+};
