@@ -1,7 +1,7 @@
 'use client'
 
 import {useEffect, useState} from "react";
-import {useRouter} from "next/router";
+import {useRouter} from "next/navigation";
 import axios from "axios";
 import Spinner from "@/components/Spinner";
 import {ReactSortable} from "react-sortablejs";
@@ -55,6 +55,7 @@ export default function ProductForm({
       const data = new FormData();
       for (const file of files) {
         data.append('file', file);
+        console.log(file)
       }
       const res = await axios.post('/api/upload', data);
       setImages(oldImages => {
