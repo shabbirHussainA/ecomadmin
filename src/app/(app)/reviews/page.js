@@ -2,6 +2,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import useSWR from "swr";
+import { Layout } from "@/components";
 
 const fetcher = url => axios.get(url).then(res => res.data);
 
@@ -23,13 +24,15 @@ export default function AdminReviewsPage() {
   }
 
   if (error) return <div>Failed to load reviews</div>;
-  if (!reviews) return <div>Loading...</div>;
 
   return (
+    <Layout>
+
+   
     <div>
       <h1>Pending Reviews</h1>
       <ul>
-        {reviews.map(review => (
+        {reviews?.map(review => (
           <li key={review._id}>
             <strong>{review.stars}</strong>: {review.description}
             <button onClick={() => approveReview(review._id)}>Approve</button>
@@ -37,5 +40,6 @@ export default function AdminReviewsPage() {
         ))}
       </ul>
     </div>
+    </Layout>
   );
 }

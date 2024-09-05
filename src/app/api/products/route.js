@@ -30,7 +30,7 @@ export async function GET(req) {
 
 export async function POST(req) {
   try {
-    await mongooseConnect();
+    await dbconnect();
     // await isAdminRequest(req, res);
 
     const { title, description, price, images, category, properties } = await req.json();
@@ -51,7 +51,7 @@ export async function POST(req) {
 
 export async function PUT(req) {
   try {
-    await mongooseConnect();
+    await dbconnect();
     // await isAdminRequest(req, res);
 
     const { title, description, price, images, category, properties, _id } = await req.json();
@@ -70,7 +70,7 @@ export async function PUT(req) {
 
 export async function DELETE(req) {
   try {
-    await mongooseConnect();
+    await dbconnect();
     // await isAdminRequest(req, res);
 
     const { searchParams } = new URL(req.url);

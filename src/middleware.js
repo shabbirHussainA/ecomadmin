@@ -20,6 +20,7 @@ export async function middleware(request) {
     url.pathname.startsWith('/categories') ||
     url.pathname.startsWith('/orders') || 
     url.pathname.startsWith('/reviews') ||
+    url.pathname.startsWith('/products') ||
     url.pathname === '/' // Protect the home route if needed
   )) {
     return NextResponse.redirect(new URL('/sign-in', request.url));
