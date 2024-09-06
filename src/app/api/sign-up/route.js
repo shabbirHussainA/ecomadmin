@@ -8,7 +8,7 @@ export async function POST(request) {
 
   try {
     const { username, email, password, role } = await request.json();
-
+    //finding the existing user
     const existingUserByEmail = await UserModel.findOne({ email });
 
     if (existingUserByEmail) {
@@ -27,9 +27,11 @@ export async function POST(request) {
             message: 'A customer cannot create an admin account',
           },
           { status: 400 }
-        );
+        );//creating a new acc as the prev user has anoter role 
       } else if (existingUserByEmail.role === 'admin' && role === 'customer') {
+        // hasheding password 
         const hashedPassword = await bcrypt.hash(password, 10);
+        //creating a new user
         const newUser = new UserModel({
           username,
           email,
@@ -48,6 +50,7 @@ export async function POST(request) {
         );
       }
     } else {
+      // if the user has come new
       const hashedPassword = await bcrypt.hash(password, 10);
       const newUser = new UserModel({
         username,

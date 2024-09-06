@@ -1,3 +1,4 @@
+// page to add product
 import ProductForm from "@/components/ProductForm";
 import Layout from "@/components/Layout";
 

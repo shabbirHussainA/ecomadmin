@@ -1,7 +1,6 @@
 import dbConnect from '../../../lib/dbConnect';
 import { Category } from '../../../models/Category';
-import { NextResponse } from 'next/server';
-
+// get route to get categ
 export async function GET(req, res) {
     await dbConnect();
     try {
@@ -19,7 +18,7 @@ export async function GET(req, res) {
         },{status:500});
     }
 }
-
+// post route to post categ
 export async function POST(req, res) {
     await dbConnect();
 
@@ -45,7 +44,7 @@ export async function POST(req, res) {
         },{status:500});
     }
 }
-
+// put route to put categ
 export async function PUT(req, res) {
     await dbConnect();
     try {
@@ -68,7 +67,7 @@ export async function PUT(req, res) {
         },{status:500});
     }
 }
-
+// delete route to delete categ
 export async function DELETE(req, res) {
     await dbConnect();
     try {

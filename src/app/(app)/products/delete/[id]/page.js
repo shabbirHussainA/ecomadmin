@@ -1,4 +1,5 @@
 'use client'
+// product delete page
 import Layout from "@/components/Layout";
 import {useParams, useRouter} from "next/navigation";
 import {useEffect, useState} from "react";

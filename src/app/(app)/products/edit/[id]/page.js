@@ -1,18 +1,17 @@
 'use client'
 import {Layout,ProductForm} from "@/components";
-import {useRouter,useParams} from "next/navigation";
+import {useParams} from "next/navigation";
 import {useEffect, useState} from "react";
 import axios from "axios";
 
 export default function EditProductPage() {
   const [productInfo, setProductInfo] = useState(null);
-  const router = useRouter();
-  const {id} = useParams()
+  const {id} = useParams() // getting id from the useParams
   useEffect(() => {
     if (!id) {
       return;
     }
-    axios.get('/api/products?id='+id).then(response => {
+    axios.get('/api/products?id='+id).then(response => { //fetching the product details
       setProductInfo(response.data);
     });
   }, [id]);

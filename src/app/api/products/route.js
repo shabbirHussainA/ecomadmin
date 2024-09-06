@@ -1,7 +1,6 @@
 import { NextResponse } from 'next/server';
 import { Product } from '@/models/Product';
 import dbconnect from '../../../lib/dbConnect';
-// import { isAdminRequest } from '@/pages/api/auth/[...nextauth]';
 
 export async function GET(req) {
   try {

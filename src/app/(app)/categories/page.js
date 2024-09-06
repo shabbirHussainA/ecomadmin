@@ -10,23 +10,22 @@ function Categories({ swal }) {
   const [parentCategory, setParentCategory] = useState('')
   const [categories, setCategories] = useState([])
   const [properties, setProperties] = useState([])
-
+// so that category is fetched immediately when the page is load
   useEffect(() => {
     fetchCategories()
   }, [])
-
+//this is the funtion to fetch the categories 
   function fetchCategories() {
     axios.get('/api/categories').then(result => {
       setCategories(result.data.category)
-      console.log(result.data.category)
     }).catch(err => {
       console.error('Failed to fetch categories:', err);
     });
   }
-
+// this the function to save the category
   async function saveCategory(e) {
-    e.preventDefault();
-    const data = {
+    e.preventDefault(); //preventing default opertion of the funct
+    const data = { //creating obj 
       name,
       parentCategory,
       properties: properties.map(p => ({
@@ -36,13 +35,14 @@ function Categories({ swal }) {
     };
 
     try {
-      if (editedCategory) {
+      if (editedCategory) { //if edit category module is open
         data._id = editedCategory._id;
-        await axios.put('/api/categories', data);
-        setEditedCategory(null)
+        await axios.put('/api/categories', data); //updating the category in the db
+        setEditedCategory(null) //closing the edit module
       } else {
-        await axios.post('/api/categories', data)
+        await axios.post('/api/categories', data) // saving the new category 
       }
+      //setting all the values to default
       setName('');
       setParentCategory('');
       setProperties([]);
@@ -56,18 +56,20 @@ function Categories({ swal }) {
       });
     }
   }
-
+// the function to edit category
   async function editCategory(category) {
-    setEditedCategory(category);
+    //setting values of the category which needs to be edited
+    setEditedCategory(category); 
     setName(category.name);
-    setParentCategory(category.parent?._id || '');
-    setProperties(category.properties.map(({ name, values }) => ({
+    setParentCategory(category.parent?._id || '');//incase there is no parent category
+    setProperties(category.properties.map(({ name, values }) => ({ // setting all the properties one by one
       name,
       values: values.join(','),
     })));
   }
-
+// function to delete category
   function deleteCategory(category) {
+    //dialog box for confgirmation 
     swal.fire({
       title: 'Are you sure?',
       text: `Do you want to delete ${category.name}?`,
@@ -77,10 +79,12 @@ function Categories({ swal }) {
       confirmButtonColor: '#d55',
       reverseButtons: true,
     }).then(async result => {
+      //if the result is confirmed
       if (result.isConfirmed) {
         try {
+          //deleting category from the db
           await axios.delete(`/api/categories?id=${category._id}`);
-          fetchCategories();
+          fetchCategories();//fetch the updated categories
         } catch (err) {
           console.error('Failed to delete category:', err);
           swal.fire({
@@ -92,19 +96,20 @@ function Categories({ swal }) {
       }
     });
   }
-
+// handling the property name change
   function handlePropertyNameChange(index, property, newName) {
-    setProperties(prev => {
-      const properties = [...prev];
-      properties[index].name = newName;
-      return properties;
+    setProperties(prev => {// assessing the prev proprties
+      const properties = [...prev]; //speading it to an array
+      properties[index].name = newName; //changing the property name on the given index
+      return properties; //returnng the proeprty
     });
   }
-
+// to handle add property
   function addProperty() {
-    setProperties(prev => [...prev, { name: '', values: '' }]);
+    // useState set func also provides callback 
+    setProperties(prev => [...prev, { name: '', values: '' }]); // spreading the array and adding new element
   }
-
+// handling the property value change
   function handlePropertyValuesChange(index, property, newValues) {
     setProperties(prev => {
       const properties = [...prev];
@@ -112,8 +117,9 @@ function Categories({ swal }) {
       return properties;
     });
   }
-
+// to handle remove property
   function removeProperty(indexToRemove) {
+    //filtering the property and by checking through the test
     setProperties(prev => prev.filter((_, pIndex) => pIndex !== indexToRemove));
   }
 
@@ -234,7 +240,7 @@ function Categories({ swal }) {
     </Layout>
   )
 }
-
+//high order function to give props to the categories component
 export default withSwal(({ swal }, ref) => (
   <Categories swal={swal} />
 ));

@@ -182,6 +182,7 @@ export default function ProductForm({
   category:assignedCategory,
   properties:assignedProperties,
 }) {
+  //setting the initial values if received in the props
   const [title,setTitle] = useState(existingTitle || '');
   const [description,setDescription] = useState(existingDescription || '');
   const [category,setCategory] = useState(assignedCategory || '');
@@ -192,17 +193,21 @@ export default function ProductForm({
   const [isUploading,setIsUploading] = useState(false);
   const [categories,setCategories] = useState([]);
   const router = useRouter();
+  //fetching categories
   useEffect(() => {
     axios.get('/api/categories').then(result => {
       setCategories(result.data.category);
     })
   }, []);
+  // save prod func
   async function saveProduct(ev) {
     ev.preventDefault();
+    // setting data obj 
     const data = {
       title,description,price,images,category,
       properties:productProperties
     };
+    //if id is given than update the product in th db else add the new prod
     if (_id) {
       //update
       await axios.put('/api/products', {...data,_id});
@@ -212,20 +217,24 @@ export default function ProductForm({
     }
     setGoToProducts(true);
   }
+  //once the opertion is done than route to products
   if (goToProducts) {
     router.push('/products');
   }
+  //function to uplaod img
   async function uploadImages(ev) {
-    const files = ev.target?.files;
+    const files = ev.target?.files; //getting the files
     if (files?.length > 0) {
       setIsUploading(true);
       const data = new FormData();
       for (const file of files) {
+        // add new file
         data.append('file', file);
       }
+      //send to upload the files
       const res = await axios.post('/api/upload', data);
       setImages(oldImages => {
-        return [...oldImages, ...res.data.links];
+        return [...oldImages, ...res.data.links]; //add new image in the Images
       });
       setIsUploading(false);
     }
@@ -233,6 +242,7 @@ export default function ProductForm({
   function updateImagesOrder(images) {
     setImages(images);
   }
+  //
   function setProductProp(propName,value) {
     setProductProperties(prev => {
       const newProductProps = {...prev};
@@ -243,7 +253,6 @@ export default function ProductForm({
 
   const propertiesToFill = [];
   if (categories.length > 0 && category) {
-    console.log(category)
     let catInfo = categories.find(({_id}) => _id === category);
     // console.log(catInfo)
     if(catInfo){

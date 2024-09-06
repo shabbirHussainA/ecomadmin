@@ -13,7 +13,7 @@ export default function Nav({ show }) {
   const router = useRouter()
   // Uncomment and use this function if you need to implement logout functionality
   async function logout() {
-    await router.push('/');
+     router.push('/');
     await signOut();
   }
 

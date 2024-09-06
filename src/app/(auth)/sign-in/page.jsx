@@ -1,20 +1,22 @@
 'use client'
-import {zodResolver} from '@hookform/resolvers/zod'
-// import {zodResolver} from '@hookform/resolvers'
-import { useForm} from "react-hook-form"
-import Link from 'next/link'
-import { useToast } from "@/components/ui/use-toast"
-import { useRouter } from 'next/navigation'
-// import ApiResponse from '@/types/ApiResponse'
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
-import { Button } from '@/components/ui/button'
-import { signInValidation } from '@/schemas/signInSchema'
-import { signIn } from 'next-auth/react'
-// import { error } from 'console'
-export default function SignInForm() {
-  const router = useRouter();
 
+// Import necessary modules and components
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useForm } from "react-hook-form";
+import Link from 'next/link';
+import { useToast } from "@/components/ui/use-toast";
+import { useRouter } from 'next/navigation';
+import { Form, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
+import { Button } from '@/components/ui/button';
+import { signInValidation } from '@/schemas/signInSchema';
+import { signIn } from 'next-auth/react';
+
+// Define the SignInForm component
+export default function SignInForm() {
+  const router = useRouter(); // Initialize the router for navigation
+
+  // Initialize the form with default values and validation schema
   const form = useForm({
     resolver: zodResolver(signInValidation),
     defaultValues: {
@@ -23,14 +25,17 @@ export default function SignInForm() {
     },
   });
 
-  const { toast } = useToast();
+  const { toast } = useToast(); // Initialize toast for notifications
+
+  // Define the onSubmit function to handle form submission
   const onSubmit = async (data) => {
     const result = await signIn('credentials', {
       redirect: false,
       identifier: data.identifier,
       password: data.password,
     });
-    console.log(result)
+
+    // Handle errors and display appropriate toast notifications
     if (result?.error) {
       if (result.error === 'CredentialsSignin') {
         toast({
@@ -46,12 +51,14 @@ export default function SignInForm() {
         });
       }
     }
-    console.log(result)
+
+    // Redirect to the home page if login is successful
     if (result?.url) {
       router.push('/');
     }
   };
 
+  // Render the sign-in form
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-800">
       <div className="w-full max-w-md p-8 space-y-8 bg-white rounded-lg shadow-md">

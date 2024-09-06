@@ -5,7 +5,7 @@ import { Order } from '../../../models/Order';
 export async function GET() {
   try {
     await dbconnect();
-    
+    //arranging the order in ascending order date
     const orders = await Order.find().sort({ createdAt: -1 });
     
     return NextResponse.json(orders, { status: 200 });

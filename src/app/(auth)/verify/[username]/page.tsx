@@ -1,10 +1,10 @@
 'use client'
+//verify page
 import { Button } from '@/components/ui/button'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { useToast } from '@/components/ui/use-toast'
 import { verifyValidation } from '@/schemas/verifySchema'
-import ApiResponse from '@/types/ApiResponse'
 import { zodResolver } from '@hookform/resolvers/zod'
 import axios, { AxiosError } from 'axios'
 import { useParams, useRouter } from 'next/navigation'
@@ -38,7 +38,7 @@ function VerifyAccount() {
             }
         } catch (error) {
             console.log("error in signup user", error);
-            const axiosError = error as AxiosError<ApiResponse>;
+            const axiosError = error 
             toast({
               title: 'Sign up unsucessfull',
               description:axiosError.response?.data.message,
